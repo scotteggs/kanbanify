@@ -33,7 +33,14 @@ const common = {
     filename: '[name].js'
   },
   module: {
-  	loaders: [
+    preLoaders: [
+      {
+        test: /\.jsx?$/,
+        loaders: ['eslint'],
+        include: PATHS.app
+      }
+    ],
+    loaders: [
       {
         // Set up jsx. This accepts js too thanks to RegExp
         test: /\.jsx?$/,
@@ -98,7 +105,7 @@ if(TARGET === 'start' || !TARGET) {
     plugins: [
       new webpack.HotModuleReplacementPlugin(),
       new NpmInstallPlugin({
-      	save: true // --save
+        save: true // --save
       })
     ]
   });
