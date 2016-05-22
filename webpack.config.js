@@ -12,7 +12,8 @@ const TARGET = process.env.npm_lifecycle_event;
 
 const PATHS = {
   app: path.join(__dirname, 'app'),
-  build: path.join(__dirname, 'build')
+  build: path.join(__dirname, 'build'),
+  style: path.join(__dirname, 'app/main.css')
 };
 
 process.env.BABEL_ENV = TARGET;
@@ -21,7 +22,8 @@ const common = {
   // Entry accepts a path or an object of entries. We'll be using the
   // latter form given it's convenient with more complex configurations.
   entry: {
-    app: PATHS.app
+    app: PATHS.app,
+    style: PATHS.style
   },
   resolve: {
     extensions:['', '.js', '.jsx']
