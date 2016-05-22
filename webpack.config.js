@@ -129,7 +129,10 @@ if(TARGET === 'build') {
     },
     plugins: [
       //clean after a configuration changes
-      new CleanPlugin([PATHS.build]),
+      new CleanPlugin([PATHS.build], {
+        verbose: false
+      }),
+      new ExtractTextPlugin('[name].[chunkhash].css'),
       
       // Extract vendor and manifest files
       new webpack.optimize.CommonsChunkPlugin({
