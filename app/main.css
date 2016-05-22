@@ -1,5 +1,5 @@
 body {
-  background: cornsilk;
+  background: #0099ff;
   font-family: sans-serif;
 }
 
@@ -11,7 +11,6 @@ body {
 
   background-color: #efefef;
   border: 1px solid #ccc;
-  border-radius: 0.5em;
 
   min-width: 10em;
   vertical-align: top;
@@ -24,13 +23,11 @@ body {
 
   color: #efefef;
   background-color: #333;
-
-  border-top-left-radius: 0.5em;
-  border-top-right-radius: 0.5em;
 }
 
 .lane-name {
   float: left;
+  font-weight: 650;
 }
 
 .lane-add-note {
@@ -89,6 +86,7 @@ body {
 }
 .note:hover {
   box-shadow: 0 0 0.3em 0.03em rgba(0, 0, 0, 0.7);
+  background-color: #e6e6e6;
 
   transition: 0.6s;
 }
