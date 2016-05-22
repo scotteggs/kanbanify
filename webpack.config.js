@@ -104,7 +104,7 @@ if(TARGET === 'start' || !TARGET) {
   });
 }
 
-if(TARGET === 'build') {
+if(TARGET === 'build' || TARGET === 'stats') {
   module.exports = merge(common, {
     entry: {
       vendor: Object.keys(pkg.dependencies).filter(function(v) {
