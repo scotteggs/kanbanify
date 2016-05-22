@@ -4,7 +4,7 @@ const webpack = require('webpack');
 const NpmInstallPlugin = require('npm-install-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanPlugin = require('clean-webpack-plugin');
-
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const pkg = require('./package.json');
 
 const TARGET = process.env.npm_lifecycle_event;
@@ -32,13 +32,6 @@ const common = {
   },
   module: {
   	loaders: [
-      {
-        // Test expects a RegExp! Note the slashes!
-        test: /\.css$/,
-        loaders: ['style', 'css'],
-        // Include accepts either a path or an array of paths.
-        include: PATHS.app
-      },
       {
         // Set up jsx. This accepts js too thanks to RegExp
         test: /\.jsx?$/,
@@ -91,6 +84,15 @@ if(TARGET === 'start' || !TARGET) {
       host: process.env.HOST,
       port: process.env.PORT
     },
+    module: {
+      loaders: [
+        {
+          test: /\.css$/,
+          loaders: ['style', 'css'],
+          include: PATHS.app
+        }
+      ]
+    },
     plugins: [
       new webpack.HotModuleReplacementPlugin(),
       new NpmInstallPlugin({
@@ -114,6 +116,16 @@ if(TARGET === 'build') {
       path: PATHS.build,
       filename: '[name].[chunkhash].js',
       chunkFilename: '[chunkhash].js'
+    },
+    module: {
+      loaders: [
+        // Extract CSS during build
+        {
+          test: /\.css$/,
+          loader: ExtractTextPlugin.extract('style', 'css'),
+          include: PATHS.app
+        }
+      ]
     },
     plugins: [
       //clean after a configuration changes
