@@ -2,6 +2,10 @@ const path = require('path');
 const merge = require('webpack-merge');
 const webpack = require('webpack');
 const NpmInstallPlugin = require('npm-install-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CleanPlugin = require('clean-webpack-plugin');
+
+const pkg = require('./package.json');
 
 const TARGET = process.env.npm_lifecycle_event;
 
@@ -24,7 +28,7 @@ const common = {
   },
   output: {
     path: PATHS.build,
-    filename: 'bundle.js'
+    filename: '[name].js'
   },
   module: {
   	loaders: [
@@ -47,7 +51,15 @@ const common = {
         include: PATHS.app
       }
     ]
-  }
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: 'node_modules/html-webpack-template/index.ejs',
+      title: 'Kanban app',
+      appMountId: 'app',
+      inject: false
+    })
+  ] 
 };
 
 
@@ -57,7 +69,6 @@ if(TARGET === 'start' || !TARGET) {
   module.exports = merge(common, {
     devServer: {
       devtool: 'eval-source-map',
-      contentBase: PATHS.build,
 
       // Enable history API fallback so HTML5 History API based
       // routing works. This is a good default that will come
@@ -91,7 +102,27 @@ if(TARGET === 'start' || !TARGET) {
 
 if(TARGET === 'build') {
   module.exports = merge(common, {
+    entry: {
+      vendor: Object.keys(pkg.dependencies).filter(function(v) {
+        // Exclude alt-utils as it won't work with this setup
+        // due to the way the package has been designed
+        // (no package.json main).
+        return v !== 'alt-utils';
+      })
+    },
+    output: {
+      path: PATHS.build,
+      filename: '[name].[chunkhash].js',
+      chunkFilename: '[chunkhash].js'
+    },
     plugins: [
+      //clean after a configuration changes
+      new CleanPlugin([PATHS.build]),
+      
+      // Extract vendor and manifest files
+      new webpack.optimize.CommonsChunkPlugin({
+        names: ['vendor', 'manifest']
+      }),
       // Setting DefinePlugin affects React library size!
       // DefinePlugin replaces content "as is" so we need some extra quotes
       // for the generated code to make sense
